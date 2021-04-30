@@ -1,5 +1,5 @@
 import express from "express";
-import ProductSchema from "./product-Schema.js";
+import ProductModel from "./product-Schema.js";
 import ReviewsSchema from "../reviews/review-Schema.js";
 import UserSchema from "../users/user-Schema.js";
 import {
@@ -38,7 +38,7 @@ productsRouter.post("/:ProductID/reviews", async (req, res, next) => {
 productsRouter.get("/:ProductID/reviews", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
-    const reviews = await ProductSchema.findById(ProductID);
+    const reviews = await ProductModel.findById(ProductID);
     res.send(reviews);
   } catch (error) {
     next(error);
@@ -50,7 +50,7 @@ productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
     const reviewID = req.params.ReviewID;
-    const review = await ProductSchema.find;
+    const review = await ProductModel.find();
   } catch (error) {
     next(error);
   }
