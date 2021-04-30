@@ -1,6 +1,6 @@
 import express from "express";
-import ProductSchema from "./schema.js";
-import ReviewsSchema from "../reviews/schema.js";
+import ProductSchema from "./product-Schema.js";
+import ReviewsSchema from "../reviews/reviews-Schema.js";
 import UserSchema from "../users/schema.js";
 
 const router = express.Router();
