@@ -62,9 +62,23 @@ productsRouter.get("/:ProductID/reviews", async (req, res, next) => {
 //GET A SINGULAR REVIEW
 productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
-    const ProductID = req.params.ProductID;
-    const reviewID = req.params.ReviewID;
-    const product = await ProductModel.findById(ProductID, { reviews});
+    const { reviews } = await ProductModel.findOne(
+      { _id: mongoose.Types.ObjectId(req.params.ProductID) }, 
+      // Here^ I need to use mongoose.Types.ObjectId(req.params.id) from mongoose to parse this string in params to type object_id in mongoDB
+      { reviews: {
+          $elemMatch: { _id: mongoose.Types.ObjectId(req.params.reviewID) },
+        },
+      }
+    );
+    if (reviews && reviews.length > 0 ) {
+      res.status(200).send(reviews[0])
+    } else {
+      const error = new Error(
+        `review with id ${req.params.reviewID} not found`
+      );
+      error.statusCode = 404;
+      next(error);
+    }
   } catch (error) {
     next(error);
   }
