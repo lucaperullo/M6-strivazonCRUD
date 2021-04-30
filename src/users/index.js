@@ -1,9 +1,9 @@
 import express from "express";
 import UserSchema from "./schema.js";
 
-const userRouter = express.Router();
+const userRoute = express.Router();
 
-userRouter.get("/", async (req, res) => {
+userRoute.get("/", async (req, res) => {
   try {
     if (req.query.name) {
       const user = await UserSchema.findOne({ name: req.query.name });
@@ -21,7 +21,7 @@ userRouter.get("/", async (req, res) => {
   }
 });
 
-userRouter.get("/:id", async (req, res) => {
+userRoute.get("/:id", async (req, res) => {
   try {
     const selectedUser = await UserSchema.findById(req.params.id);
     if (selectedUser) {
@@ -34,7 +34,7 @@ userRouter.get("/:id", async (req, res) => {
   }
 });
 
-userRouter.post("/", async (req, res) => {
+userRoute.post("/", async (req, res) => {
   try {
     const newUser = new UserSchema(req.body);
     const { _id } = await newUser.save();
@@ -46,7 +46,7 @@ userRouter.post("/", async (req, res) => {
   }
 });
 
-userRouter.delete("/:id", async (req, res) => {
+userRoute.delete("/:id", async (req, res) => {
   try {
     const user = await UserSchema.findByIdAndDelete(req.params.id);
     if (user) {
@@ -59,7 +59,7 @@ userRouter.delete("/:id", async (req, res) => {
   }
 });
 
-userRouter.put("/:id", async (req, res) => {
+userRoute.put("/:id", async (req, res) => {
   try {
     const user = await UserSchema.findByIdAndUpdate(
       req.params.id,
@@ -76,4 +76,4 @@ userRouter.put("/:id", async (req, res) => {
   }
 });
 
-export default usersRoute;
+export default userRoute;
