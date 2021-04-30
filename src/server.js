@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import listEndpoints from "express-list-endpoints";
 
 // import productsRoute from "./products/index.js";
 import userRoute from "./users/index.js";
@@ -23,3 +24,4 @@ mongoose
       console.log("The server's power level is over ", port);
     })
   );
+console.table(listEndpoints(server));
