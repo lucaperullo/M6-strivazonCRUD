@@ -3,8 +3,10 @@ const { Schema, model } = mongoose;
 export const UserSchema = new Schema(
   {
     name: String,
+    email: String,
+    password: String,
     img: String,
-    cart: Array,
+    cart: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   },
   { timestamps: true }
 );

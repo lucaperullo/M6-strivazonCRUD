@@ -14,6 +14,7 @@ import {
   badRequestHandler,
   catchAllHandler,
 } from "./errorHandling.js";
+import cartRoute from "./cart/index.js";
 
 const server = express();
 const port = process.env.PORT;
@@ -23,6 +24,7 @@ server.use(express.json());
 server.use("/users", userRoute);
 server.use("/products", productsRouter);
 server.use("/services", servicesRoutes);
+server.use("/cart", cartRoute);
 
 server.use(notFoundHandler);
 server.use(unauthorizedHandler);
