@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import productsRouter from "./products/index.js";
+import productsRouter from "./products/products-index.js";
 import userRoute from "./users/index.js";
 
 const server = express();
