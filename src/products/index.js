@@ -18,9 +18,9 @@ productsRouter.get("/:id", getProductById);
 
 productsRouter.post("/", postProduct);
 
-productsRouter.put("/:id", deleteProduct);
+productsRouter.put("/:id", editProduct);
 
-productsRouter.delete("/:id", editProduct);
+productsRouter.delete("/:id", deleteProduct);
 
 //REVIEWS ROUTES***************
 
