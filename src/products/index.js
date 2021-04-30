@@ -1,6 +1,6 @@
 import express from "express";
 import ProductModel from "./product-Schema.js";
-// import ReviewsSchema from "../reviews/review-Schema.js";
+import mongoose from "mongoose"
 import UserSchema from "../users/user-Schema.js";
 import {
   getProducts,
@@ -40,7 +40,7 @@ productsRouter.post("/:ProductID/reviews", async (req, res, next) => {
       res.status(201).send({ message: "new review in this product" });
     } else {
       const error = new Error(`error in post new review`);
-      error.statusCode = 400;
+      error.httpStatusCode = 400;
       next(error);
     }
   } catch (error) {
@@ -71,13 +71,13 @@ productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
         },
       }
     );
-    if (reviews && reviews.length > 0) {
-      res.status(200).send(reviews[0]);
+    if (reviews && reviews.length > 0 ) {
+      res.status(200).send(reviews[0])
     } else {
       const error = new Error(
         `review with id ${req.params.reviewID} not found`
       );
-      error.statusCode = 404;
+      error.httpStatusCode = 404;
       next(error);
     }
   } catch (error) {
@@ -85,33 +85,30 @@ productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   }
 });
 
-//POST A REVIEW
-// productsRouter.post("/:ProductID/review/:userID", async (req, res, next) => {
-//   try {
-//     await UserSchema.addReviewIdToProduct(req.params.)
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 //MODIFY A REVIEW
 productsRouter.put("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
-    const modifiedReview = await ReviewModel.findByIdAndUpdate(
-      req.params.reviewID,
-      req.body,
-      {
-        runValidators: true,
-        new: true,
-      }
-    );
+      const modifiedReview = await ProductModel.findByIdAndUpdate(
+        {
+          _id: mongoose.Types.ObjectId(req.params.ProductID),
+          "reviews._id": mongoose.Types.ObjectId(req.params.reviewID),
+        },
+        { $set: { "reviews.$": req.body } }, // $<-- THIS IS A PLACEHOLDER FOR INDEX IN ARRAYS; The concept of the $ is pretty similar as having something like const $ = array.findIndex(el => el._id === req.params.reviewID)
+        {
+          runValidators: true,
+          new: true,
+        }
+      )
     if (modifiedReview) {
-      res.send(modifiedReview);
+      console.log(modifiedReview)
+      res.status(200).send(modifiedReview);
     } else {
-      next();
+      const error = new Error()
+      error.httpStatusCode = 400
+      next(error)
     }
   } catch (error) {
-    console.log(error);
+    console.log(error)
     next(error);
   }
 });
@@ -121,39 +118,22 @@ productsRouter.delete(
   "/:ProductID/reviews/:reviewID",
   async (req, res, next) => {
     try {
-      const newReview = await ReviewModel.findById(req.params.reviewID);
-      console.log(newReview);
-      const updatedProducts = await ProductModel.findByIdAndUpdate(
+      const modifiedProduct = await ProductModel.findByIdAndUpdate(
         req.params.ProductID,
         {
           $pull: {
-            reviews: newReview,
+            reviews: { _id: mongoose.Types.ObjectId(req.params.reviewID) },
           },
         },
-        { runValidators: true, new: true, projection: { reviews: 1 } }
-      );
-      if (updatedProducts) {
-        res.status(201).send({ message: "deleted review in this product" });
-      } else {
-        const error = new Error(`error in post new review`);
-        error.statusCode = 400;
-        next(error);
-      }
+        {
+          new: true,
+        }
+      )
+      res.status(204).send()
     } catch (error) {
       next(error);
     }
   }
 );
 
-//try {
-//       const review = await ReviewModel.findByIdAndDelete(req.params.reviewID);
-//       if (review) {
-//         res.send(review);
-//       } else {
-//         next();
-//       }
-//     } catch (error) {
-//       console.log(error);
-//       next(error);
-//     }
 export default productsRouter;

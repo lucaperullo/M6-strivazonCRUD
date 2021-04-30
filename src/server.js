@@ -36,6 +36,7 @@ mongoose
   .connect(process.env.MONGO_ATLAS, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(
     server.listen(port, () => {

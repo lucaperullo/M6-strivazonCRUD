@@ -1,6 +1,6 @@
 import ProductModel from "./product-Schema.js";
 // import mongoose from "mongoose";
-import q2m from "query-to-mongo";
+// import q2m from "query-to-mongo";
 
 export const getProducts = async (req, res, next) => {
   try {
@@ -18,7 +18,7 @@ export const getProductById = async (req, res, next) => {
       res.status(200).send(product);
     } else {
       const error = new Error();
-      error.statusCode = 404;
+      error.httpStatusCode = 404;
       next(error);
     }
   } catch (error) {
@@ -48,7 +48,7 @@ export const deleteProduct = async (req, res, next) => {
       res.status(204).send();
     } else {
       const error = new Error(`Product with id ${req.params.id} not found`);
-      error.statusCode = 404;
+      error.httpStatusCode = 404;
       next(error);
     }
   } catch (error) {
@@ -71,7 +71,7 @@ export const editProduct = async (req, res, next) => {
       res.send(product);
     } else {
       const error = new Error(`Product with id ${req.params.id} not found`);
-      error.statusCode = 404;
+      error.httpStatusCode = 404;
       next(error);
     }
   } catch (error) {
