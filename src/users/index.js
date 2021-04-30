@@ -61,11 +61,10 @@ userRoute.delete("/:id", async (req, res) => {
 
 userRoute.put("/:id", async (req, res) => {
   try {
-    const user = await UserSchema.findByIdAndUpdate(
-      req.params.id,
-      req.params.body,
-      { runValidators: true, new: true }
-    );
+    const user = await UserSchema.findByIdAndUpdate(req.params.id, req.body, {
+      runValidators: true,
+      new: true,
+    });
     if (user) {
       res.send(user);
     } else {
@@ -75,7 +74,5 @@ userRoute.put("/:id", async (req, res) => {
     res.send({ message: error });
   }
 });
-
-const upload = multer({});
 
 export default userRoute;
