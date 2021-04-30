@@ -2,9 +2,18 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
+import servicesRoutes from "./services/index.js";
 
 import productsRouter from "./products/index.js";
 import userRoute from "./users/index.js";
+
+import {
+  notFoundHandler,
+  unauthorizedHandler,
+  forbiddenHandler,
+  badRequestHandler,
+  catchAllHandler,
+} from "./errorHandling.js";
 
 const server = express();
 const port = process.env.PORT;
@@ -13,6 +22,13 @@ server.use(cors());
 server.use(express.json());
 server.use("/users", userRoute);
 server.use("/products", productsRouter);
+server.use("/services", servicesRoutes);
+
+server.use(notFoundHandler);
+server.use(unauthorizedHandler);
+server.use(forbiddenHandler);
+server.use(badRequestHandler);
+server.use(catchAllHandler);
 
 mongoose
   .connect(process.env.MONGO_ATLAS, {

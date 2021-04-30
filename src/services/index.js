@@ -1,5 +1,4 @@
 import express from "express";
-import multer from "multer";
 
 import axios from "axios";
 import pdfMake from "pdfmake";
@@ -8,7 +7,6 @@ import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const servicesRoutes = express.Router();
-const upload = multer({});
 
 // ********* GLOBAL FUNCTIONS
 
