@@ -2,10 +2,29 @@ import express from "express";
 import ProductSchema from "./product-Schema.js";
 import ReviewsSchema from "../reviews/review-Schema.js";
 import UserSchema from "../users/user-Schema.js";
+import {
+  getProducts,
+  getProductById,
+  postProduct,
+  deleteProduct,
+  editProduct,
+} from "./productControllers.js";
 
-const router = express.Router();
+const productsRouter = express.Router();
 
-router.post("/:ProductID/reviews", async (req, res, next) => {
+productsRouter.get("/", getProducts);
+
+productsRouter.get("/:id", getProductById);
+
+productsRouter.post("/", postProduct);
+
+productsRouter.put("/:id", deleteProduct);
+
+productsRouter.delete("/:id", editProduct);
+
+//REVIEWS ROUTES***************
+
+productsRouter.post("/:ProductID/reviews", async (req, res, next) => {
   try {
     const newReview = new ReviewsSchema(req.body);
     const { _id } = await newReview.save();
@@ -16,7 +35,7 @@ router.post("/:ProductID/reviews", async (req, res, next) => {
 });
 
 //GET ALL REVIEWS FOR A PRODUCT
-router.get("/:ProductID/reviews", async (req, res, next) => {
+productsRouter.get("/:ProductID/reviews", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
     const reviews = await ProductSchema.findById(ProductID);
@@ -27,7 +46,7 @@ router.get("/:ProductID/reviews", async (req, res, next) => {
 });
 
 //GET A SINGULAR REVIEW
-router.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
+productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
     const reviewID = req.params.ReviewID;
@@ -38,7 +57,7 @@ router.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
 });
 
 //POST A REVIEW
-// router.post("/:ProductID/review/:userID", async (req, res, next) => {
+// productsRouter.post("/:ProductID/review/:userID", async (req, res, next) => {
 //   try {
 //     await UserSchema.addReviewIdToProduct(req.params.)
 //   } catch (error) {
@@ -47,7 +66,7 @@ router.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
 // });
 
 //MODIFY A REVIEW
-router.put("/:ProductID/reviews/:reviewID", async (req, res, next) => {
+productsRouter.put("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
     const modifiedReview = await ReviewModel.findByIdAndUpdate(
       req.params.reviewID,
@@ -69,7 +88,7 @@ router.put("/:ProductID/reviews/:reviewID", async (req, res, next) => {
 });
 
 //DELETE A REVIEW
-router.delete("/:ProductID/reviews/:reviewID", async (req, res, next) => {
+productsRouter.delete("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
     const review = await ReviewModel.findByIdAndDelete(req.params.reviewID);
     if (review) {
@@ -82,4 +101,4 @@ router.delete("/:ProductID/reviews/:reviewID", async (req, res, next) => {
     next(error);
   }
 });
-export default router;
+export default productsRouter;

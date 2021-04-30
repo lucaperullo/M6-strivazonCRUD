@@ -3,7 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
 
-import productsRouter from "./products/products-index.js";
+import productsRouter from "./products/index.js";
 import userRoute from "./users/index.js";
 
 const server = express();
