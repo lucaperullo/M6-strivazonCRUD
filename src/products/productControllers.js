@@ -1,4 +1,4 @@
-import ProductSchema from "./product-Schema.js";
+import ProductModel from "./product-Schema.js";
 // import mongoose from "mongoose";
 import q2m from "query-to-mongo";
 
@@ -7,9 +7,9 @@ export const getProducts = async (req, res, next) => {
     const { criteria, options, links } = q2m(req.query);
     //   const query = q2m(req.query);
 
-    const total = await ProductSchema.countDocuments();
+    const total = await ProductModel.countDocuments();
 
-    const products = await ProductSchema.find(criteria, options.fields)
+    const products = await ProductModel.find(criteria, options.fields)
       .sort(options.sort)
       .skip(options.skip)
       .limit(options.limit);
