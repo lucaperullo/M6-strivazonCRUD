@@ -4,8 +4,12 @@ const { Schema, model } = mongoose;
 
 export const ProductSchema = new Schema(
   {
-    name: String,
-    img: String,
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    brand: { type: String, required: true },
+    imgUrl: { type: String, required: true },
+    price: { type: Number, required: true },
+    category: { type: String, required: true, enum: ["electronics", "books"] },
     reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
   },
   { timestamps: true }

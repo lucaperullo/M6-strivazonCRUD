@@ -1,23 +1,11 @@
-import ProductSchema from "./product-Schema.js";
+import ProductModel from "./product-Schema.js";
 // import mongoose from "mongoose";
 import q2m from "query-to-mongo";
 
 export const getProducts = async (req, res, next) => {
   try {
-    const { criteria, options, links } = q2m(req.query);
-    //   const query = q2m(req.query);
-
-    const total = await ProductSchema.countDocuments();
-
-    const products = await ProductSchema.find(criteria, options.fields)
-      .sort(options.sort)
-      .skip(options.skip)
-      .limit(options.limit);
-    res.send({
-      success: true,
-      links: links("/products", total),
-      data: products,
-    });
+    const products = await ProductModel.find()
+    res.status(200).send(products);
   } catch (error) {
     next(error);
   }
