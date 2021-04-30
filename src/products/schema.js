@@ -11,14 +11,6 @@ export const ProductSchema = new Schema(
   { timestamps: true }
 );
 
-export const ReviewSchema = new Schema(
-  {
-    comment: String,
-    rate: Number,
-  },
-  { timestamps: true }
-);
-
 ProductSchema.static(
   "addReviewIdToProduct",
   async function (ReviewID, ProductID) {
