@@ -53,7 +53,7 @@ productsRouter.get("/:ProductID/reviews", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
     const products = await ProductModel.findById(ProductID);
-    res.send({reviews: products.reviews});
+    res.send({ reviews: products.reviews });
   } catch (error) {
     next(error);
   }
@@ -64,7 +64,7 @@ productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
     const reviewID = req.params.ReviewID;
-    const product = await ProductModel.findById(ProductID, { reviews});
+    const product = await ProductModel.findById(ProductID, { reviews });
   } catch (error) {
     next(error);
   }
