@@ -76,4 +76,4 @@ userRouter.put("/:id", async (req, res) => {
   }
 });
 
-export default usersRoute;
+export default userRouter;
