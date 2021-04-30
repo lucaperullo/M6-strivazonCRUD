@@ -1,7 +1,7 @@
 import express from "express";
 import ProductSchema from "./product-Schema.js";
-import ReviewsSchema from "../reviews/reviews-Schema.js";
-import UserSchema from "../users/schema.js";
+import ReviewsSchema from "../reviews/review-Schema.js";
+import UserSchema from "../users/user-Schema.js";
 
 const router = express.Router();
 
