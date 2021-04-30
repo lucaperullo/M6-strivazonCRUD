@@ -176,24 +176,25 @@ const errorMessage = (value, message, param = "_id", url = "url") => {
 
 servicesRoutes.post("/email/catalogue", async (req, res, next) => {
   try {
-    if (req.body.email) {
+    if (req.body) {
       if (req.body.id) {
         const response = await axios({
           method: "get",
           url: `${process.env.AMZ_BASE_URL + "/products/" + req.body.id}`,
         });
 
-        // const text = JSON.stringify(response.data.Search, null, 1);
+        const text = JSON.stringify(response.data.Search, null, 1);
 
-        // const msg = {
-        //   to: req.body.email,
-        //   from: process.env.SENDER_EMAIL, // Use the email address or domain you verified above
-        //   subject: "Catalogue request",
-        //   text: text,
-        //   html: `
-        //   `,
-        // };
-        // await sgMail.send(msg);
+        const msg = {
+          to: req.body.email,
+          from: process.env.SENDER_EMAIL, // Use the email address or domain you verified above
+          subject: "Catalogue request",
+          text: text,
+          html: `
+          
+          `,
+        };
+        await sgMail.send(msg);
         res.send("Email successfully sent");
       } else {
         const error = errorMessage(`Title query is missing.`);
