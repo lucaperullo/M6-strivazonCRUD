@@ -2,7 +2,25 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-export const ProductSchema = new Schema(
+const reviewSchema = new Schema(
+  {
+    comment: {
+      type: String,
+      required: true,
+    },
+    rate: {
+      type: Number,
+      required: true,
+    },
+    user: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const ProductSchema = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -10,7 +28,7 @@ export const ProductSchema = new Schema(
     imgUrl: { type: String, required: true },
     price: { type: Number, required: true },
     category: { type: String, required: true, enum: ["electronics", "books"] },
-    reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
+    reviews: [reviewSchema],
   },
   { timestamps: true }
 );

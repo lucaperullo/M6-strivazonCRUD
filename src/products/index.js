@@ -1,6 +1,6 @@
 import express from "express";
 import ProductModel from "./product-Schema.js";
-import ReviewsSchema from "../reviews/review-Schema.js";
+// import ReviewsSchema from "../reviews/review-Schema.js";
 import UserSchema from "../users/user-Schema.js";
 import {
   getProducts,
@@ -26,9 +26,23 @@ productsRouter.delete("/:id", deleteProduct);
 
 productsRouter.post("/:ProductID/reviews", async (req, res, next) => {
   try {
-    const newReview = new ReviewsSchema(req.body);
-    const { _id } = await newReview.save();
-    res.status(201).send(_id);
+    const newReview = req.body;
+    const updatedProducts = await ProductModel.findByIdAndUpdate(
+      req.params.ProductID,
+      {
+        $push: {
+          reviews: newReview,
+        },
+      },
+      { runValidators: true, new: true, projection: { reviews: 1 } }
+    );
+    if (updatedProducts) {
+      res.status(201).send({ message: "new review in this product" });
+    } else {
+      const error = new Error(`error in post new review`);
+      error.statusCode = 400;
+      next(error);
+    }
   } catch (error) {
     next(error);
   }
@@ -38,8 +52,8 @@ productsRouter.post("/:ProductID/reviews", async (req, res, next) => {
 productsRouter.get("/:ProductID/reviews", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
-    const reviews = await ProductModel.findById(ProductID);
-    res.send(reviews);
+    const products = await ProductModel.findById(ProductID);
+    res.send({reviews: products.reviews});
   } catch (error) {
     next(error);
   }
@@ -50,7 +64,7 @@ productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
     const reviewID = req.params.ReviewID;
-    const review = await ProductModel.find();
+    const product = await ProductModel.findById(ProductID, { reviews});
   } catch (error) {
     next(error);
   }
@@ -88,17 +102,20 @@ productsRouter.put("/:ProductID/reviews/:reviewID", async (req, res, next) => {
 });
 
 //DELETE A REVIEW
-productsRouter.delete("/:ProductID/reviews/:reviewID", async (req, res, next) => {
-  try {
-    const review = await ReviewModel.findByIdAndDelete(req.params.reviewID);
-    if (review) {
-      res.send(review);
-    } else {
-      next();
+productsRouter.delete(
+  "/:ProductID/reviews/:reviewID",
+  async (req, res, next) => {
+    try {
+      const review = await ReviewModel.findByIdAndDelete(req.params.reviewID);
+      if (review) {
+        res.send(review);
+      } else {
+        next();
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
-  } catch (error) {
-    console.log(error);
-    next(error);
   }
-});
+);
 export default productsRouter;
