@@ -53,7 +53,7 @@ productsRouter.get("/:ProductID/reviews", async (req, res, next) => {
   try {
     const ProductID = req.params.ProductID;
     const products = await ProductModel.findById(ProductID);
-    res.send({reviews: products.reviews});
+    res.send({ reviews: products.reviews });
   } catch (error) {
     next(error);
   }
@@ -63,15 +63,16 @@ productsRouter.get("/:ProductID/reviews", async (req, res, next) => {
 productsRouter.get("/:ProductID/reviews/:reviewID", async (req, res, next) => {
   try {
     const { reviews } = await ProductModel.findOne(
-      { _id: mongoose.Types.ObjectId(req.params.ProductID) }, 
+      { _id: mongoose.Types.ObjectId(req.params.ProductID) },
       // Here^ I need to use mongoose.Types.ObjectId(req.params.id) from mongoose to parse this string in params to type object_id in mongoDB
-      { reviews: {
+      {
+        reviews: {
           $elemMatch: { _id: mongoose.Types.ObjectId(req.params.reviewID) },
         },
       }
     );
-    if (reviews && reviews.length > 0 ) {
-      res.status(200).send(reviews[0])
+    if (reviews && reviews.length > 0) {
+      res.status(200).send(reviews[0]);
     } else {
       const error = new Error(
         `review with id ${req.params.reviewID} not found`
@@ -120,16 +121,39 @@ productsRouter.delete(
   "/:ProductID/reviews/:reviewID",
   async (req, res, next) => {
     try {
-      const review = await ReviewModel.findByIdAndDelete(req.params.reviewID);
-      if (review) {
-        res.send(review);
+      const newReview = await ReviewModel.findById(req.params.reviewID);
+      console.log(newReview);
+      const updatedProducts = await ProductModel.findByIdAndUpdate(
+        req.params.ProductID,
+        {
+          $pull: {
+            reviews: newReview,
+          },
+        },
+        { runValidators: true, new: true, projection: { reviews: 1 } }
+      );
+      if (updatedProducts) {
+        res.status(201).send({ message: "deleted review in this product" });
       } else {
-        next();
+        const error = new Error(`error in post new review`);
+        error.statusCode = 400;
+        next(error);
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
 );
+
+//try {
+//       const review = await ReviewModel.findByIdAndDelete(req.params.reviewID);
+//       if (review) {
+//         res.send(review);
+//       } else {
+//         next();
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       next(error);
+//     }
 export default productsRouter;
