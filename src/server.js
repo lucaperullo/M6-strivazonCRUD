@@ -1,17 +1,18 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import listEndpoints from "express-list-endpoints";
 
-import productsRoute from "./products/index.js";
-import usersRoute from "./users/index.js";
+import productsRouter from "./products/products-index.js";
+import userRoute from "./users/index.js";
 
 const server = express();
 const port = process.env.PORT;
 
 server.use(cors());
 server.use(express.json());
-server.use("/users", usersRoute);
-server.use("/products", productsRoute);
+server.use("/users", userRoute);
+server.use("/products", productsRouter);
 
 mongoose
   .connect(process.env.MONGO_ATLAS, {
@@ -23,3 +24,4 @@ mongoose
       console.log("The server's power level is over ", port);
     })
   );
+console.table(listEndpoints(server));
