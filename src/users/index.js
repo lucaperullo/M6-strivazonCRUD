@@ -6,14 +6,14 @@ const userRouter = express.Router();
 userRouter.get("/", async (req, res) => {
   try {
     if (req.query.name) {
-      const user = await userSchema.findOne({ name: req.query.name });
+      const user = await UserSchema.findOne({ name: req.query.name });
       if (user) {
         res.status(200).send(user);
       } else {
         res.status(404).send("user not found");
       }
     } else {
-      const allUsers = await userSchema.find();
+      const allUsers = await UserSchema.find();
       res.status(200).send(allUsers);
     }
   } catch (error) {
