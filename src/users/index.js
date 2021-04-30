@@ -76,4 +76,6 @@ userRoute.put("/:id", async (req, res) => {
   }
 });
 
+const upload = multer({});
+
 export default userRoute;
